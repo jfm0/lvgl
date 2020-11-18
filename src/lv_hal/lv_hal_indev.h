@@ -123,38 +123,44 @@ typedef struct _lv_indev_drv_t {
     uint16_t long_press_rep_time;
 } lv_indev_drv_t;
 
+typedef struct {
+    /*Pointer and button data*/
+    lv_point_t act_point; /**< Current point of input device. */
+    lv_point_t last_point; /**< Last point of input device. */
+    lv_point_t vect; /**< Difference between `act_point` and `last_point`. */
+    lv_point_t drag_sum; /*Count the dragged pixels to check LV_INDEV_DEF_DRAG_LIMIT*/
+    lv_point_t drag_throw_vect;
+    struct _lv_obj_t * act_obj;      /*The object being pressed*/
+    struct _lv_obj_t * last_obj;     /*The last object which was pressed (used by drag_throw and
+                                        other post-release event)*/
+    struct _lv_obj_t * last_pressed; /*The lastly pressed object*/
+
+    lv_gesture_dir_t gesture_dir;
+    lv_point_t gesture_sum; /*Count the gesture pixels to check LV_INDEV_DEF_GESTURE_LIMIT*/
+    /*Flags*/
+    uint8_t drag_limit_out : 1;
+    uint8_t drag_in_prog : 1;
+    lv_drag_dir_t drag_dir  : 3;
+    uint8_t gesture_sent : 1;
+} lv_indev_proc_types_pointer_t;
+
+typedef struct {
+    /*Keypad data*/
+    lv_indev_state_t last_state;
+    uint32_t last_key;
+} lv_indev_proc_types_keypad_t;
+
+typedef union {
+    lv_indev_proc_types_pointer_t pointer;
+    lv_indev_proc_types_keypad_t keypad;
+} lv_indev_proc_types_t;
+
 /** Run time data of input devices
  * Internally used by the library, you should not need to touch it.
  */
 typedef struct _lv_indev_proc_t {
     lv_indev_state_t state; /**< Current state of the input device. */
-    union {
-        struct {
-            /*Pointer and button data*/
-            lv_point_t act_point; /**< Current point of input device. */
-            lv_point_t last_point; /**< Last point of input device. */
-            lv_point_t vect; /**< Difference between `act_point` and `last_point`. */
-            lv_point_t drag_sum; /*Count the dragged pixels to check LV_INDEV_DEF_DRAG_LIMIT*/
-            lv_point_t drag_throw_vect;
-            struct _lv_obj_t * act_obj;      /*The object being pressed*/
-            struct _lv_obj_t * last_obj;     /*The last object which was pressed (used by drag_throw and
-                                                other post-release event)*/
-            struct _lv_obj_t * last_pressed; /*The lastly pressed object*/
-
-            lv_gesture_dir_t gesture_dir;
-            lv_point_t gesture_sum; /*Count the gesture pixels to check LV_INDEV_DEF_GESTURE_LIMIT*/
-            /*Flags*/
-            uint8_t drag_limit_out : 1;
-            uint8_t drag_in_prog : 1;
-            lv_drag_dir_t drag_dir  : 3;
-            uint8_t gesture_sent : 1;
-        } pointer;
-        struct {
-            /*Keypad data*/
-            lv_indev_state_t last_state;
-            uint32_t last_key;
-        } keypad;
-    } types;
+    lv_indev_proc_types_t types;
 
     uint32_t pr_timestamp;         /**< Pressed time stamp*/
     uint32_t longpr_rep_timestamp; /**< Long press repeat time stamp*/

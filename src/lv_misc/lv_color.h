@@ -230,19 +230,22 @@ typedef union {
     uint8_t full;
 } lv_color8_t;
 
-typedef union {
-    struct {
+typedef struct _lv_color16_bitfields
+{
 #if LV_COLOR_16_SWAP == 0
-        uint16_t blue : 5;
-        uint16_t green : 6;
-        uint16_t red : 5;
+    uint16_t blue : 5;
+    uint16_t green : 6;
+    uint16_t red : 5;
 #else
-        uint16_t green_h : 3;
-        uint16_t red : 5;
-        uint16_t blue : 5;
-        uint16_t green_l : 3;
+    uint16_t green_h : 3;
+    uint16_t red : 5;
+    uint16_t blue : 5;
+    uint16_t green_l : 3;
 #endif
-    } ch;
+} lv_color16_ch_t;
+
+typedef union {
+    lv_color16_ch_t ch;
     uint16_t full;
 } lv_color16_t;
 

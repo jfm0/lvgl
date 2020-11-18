@@ -70,19 +70,21 @@ typedef struct {
 } lv_draw_mask_common_dsc_t;
 
 typedef struct {
+    /*First point */
+    lv_point_t p1;
+
+    /*Second point*/
+    lv_point_t p2;
+
+    /*Which side to keep?*/
+    lv_draw_mask_line_side_t side : 2;
+} lv_draw_mask_line_param_cfg_t;
+
+typedef struct {
     /*The first element must be the common descriptor*/
     lv_draw_mask_common_dsc_t dsc;
 
-    struct {
-        /*First point */
-        lv_point_t p1;
-
-        /*Second point*/
-        lv_point_t p2;
-
-        /*Which side to keep?*/
-        lv_draw_mask_line_side_t side : 2;
-    } cfg;
+    lv_draw_mask_line_param_cfg_t cfg;
 
     /*A point of the line*/
     lv_point_t origo;
@@ -109,14 +111,16 @@ typedef struct {
 } lv_draw_mask_line_param_t;
 
 typedef struct {
+    lv_point_t vertex_p;
+    lv_coord_t start_angle;
+    lv_coord_t end_angle;
+} lv_draw_mask_angle_param_cfg_t;
+
+typedef struct {
     /*The first element must be the common descriptor*/
     lv_draw_mask_common_dsc_t dsc;
 
-    struct {
-        lv_point_t vertex_p;
-        lv_coord_t start_angle;
-        lv_coord_t end_angle;
-    } cfg;
+    lv_draw_mask_angle_param_cfg_t cfg;
 
     lv_draw_mask_line_param_t start_line;
     lv_draw_mask_line_param_t end_line;
@@ -124,42 +128,48 @@ typedef struct {
 } lv_draw_mask_angle_param_t;
 
 typedef struct {
+    lv_area_t rect;
+    lv_coord_t radius;
+    /* Invert the mask. 0: Keep the pixels inside.*/
+    uint8_t outer: 1;
+} lv_draw_mask_radius_param_cfg_t;
+
+typedef struct {
     /*The first element must be the common descriptor*/
     lv_draw_mask_common_dsc_t dsc;
 
-    struct {
-        lv_area_t rect;
-        lv_coord_t radius;
-        /* Invert the mask. 0: Keep the pixels inside.*/
-        uint8_t outer: 1;
-    } cfg;
+    lv_draw_mask_radius_param_cfg_t cfg;
     int32_t y_prev;
     lv_sqrt_res_t y_prev_x;
 
 } lv_draw_mask_radius_param_t;
 
 typedef struct {
+    lv_area_t coords;
+    lv_coord_t y_top;
+    lv_coord_t y_bottom;
+    lv_opa_t opa_top;
+    lv_opa_t opa_bottom;
+} lv_draw_mask_fade_param_cfg_t;
+
+typedef struct {
     /*The first element must be the common descriptor*/
     lv_draw_mask_common_dsc_t dsc;
 
-    struct {
-        lv_area_t coords;
-        lv_coord_t y_top;
-        lv_coord_t y_bottom;
-        lv_opa_t opa_top;
-        lv_opa_t opa_bottom;
-    } cfg;
+    lv_draw_mask_fade_param_cfg_t cfg;
 
 } lv_draw_mask_fade_param_t;
+
+typedef struct {
+    lv_area_t coords;
+    const lv_opa_t * map;
+} lv_draw_mask_map_param_cfg_t;
 
 typedef struct _lv_draw_mask_map_param_t {
     /*The first element must be the common descriptor*/
     lv_draw_mask_common_dsc_t dsc;
 
-    struct {
-        lv_area_t coords;
-        const lv_opa_t * map;
-    } cfg;
+    lv_draw_mask_map_param_cfg_t cfg;
 } lv_draw_mask_map_param_t;
 
 typedef struct {
